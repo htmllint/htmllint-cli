@@ -1,0 +1,19 @@
+{
+  "name": "htmllint-cli",
+  "version": "0.0.0",
+  "description": "A simple cli for htmllint.",
+  "main": "index.js",
+  "preferGlobal": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/htmllint/htmllint-cli.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/htmllint/htmllint-cli/issues"
+  },
+  "homepage": "https://github.com/htmllint/htmllint-cli",
+  "dependencies": {
+    "htmllint": "git://github.com/htmllint/htmllint"
+  }
+}
