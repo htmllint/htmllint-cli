@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/htmllint/htmllint-cli",
   "dependencies": {
-    "htmllint": "git://github.com/htmllint/htmllint"
+    "htmllint": "git://github.com/htmllint/htmllint",
+    "liftoff": "^0.12.1"
   }
 }
