@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "A simple cli for htmllint.",
   "main": "index.js",
+  "bin": {
+    "htmllint": "./bin/cli.js"
+  },
   "preferGlobal": true,
   "repository": {
     "type": "git",
