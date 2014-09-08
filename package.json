@@ -2,7 +2,6 @@
   "name": "htmllint-cli",
   "version": "0.0.0",
   "description": "A simple cli for htmllint.",
-  "main": "index.js",
   "bin": {
     "htmllint": "./bin/cli.js"
   },
@@ -17,7 +16,7 @@
   },
   "homepage": "https://github.com/htmllint/htmllint-cli",
   "dependencies": {
-    "htmllint": "git://github.com/htmllint/htmllint",
-    "liftoff": "^0.12.1"
+    "liftoff": "^0.12.1",
+    "minimist": "^1.1.0"
   }
 }
