@@ -1,4 +1,4 @@
-#!/bin/env node
+#!/usr/bin/env node
 
 var Liftoff = require('liftoff'),
     argv = require('minimist')(process.argv.slice(2)),
