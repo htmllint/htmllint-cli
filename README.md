@@ -14,8 +14,14 @@ Installing
 Install nodejs and then run:
 
 ```sh
+# install the cli
 $ npm install -g htmllint-cli
-$ htmllint [filename]
+# create a .htmllintrc file
+$ htmllint init
+$ htmllint [files...]
+# an example:
+$ htmllint public/*.html
+$ htmllint --help # for more info
 ```
 
 Contributing
