@@ -11,17 +11,33 @@ htmllint-cli
 Installing
 ----------
 
-Install nodejs and then run:
+Install [nodejs](http://nodejs.org/) and install the `htmllint-cli` module globally:
 
 ```sh
-# install the cli
+# you may have to sudo this line depending on your installation
 $ npm install -g htmllint-cli
-# create a .htmllintrc file
+```
+
+Once installed, create a configuration file for your project:
+
+```sh
+$ cd your-project
 $ htmllint init
-$ htmllint [files...]
-# an example:
-$ htmllint public/*.html
-$ htmllint --help # for more info
+```
+
+This should create a `.htmllintrc` file in your current directory. This file should
+be a valid JSON file that contains options defined
+[on the htmllint wiki](https://github.com/htmllint/htmllint/wiki/Options).
+
+After creating your configuration, you can lint some files like so:
+
+```sh
+$ htmllint index.html
+# also supports glob expansions
+$ htmllint **/*.html
+$ htmllint # by default expands to **/*.html
+
+$ htmllint --help # to get more information
 ```
 
 Contributing
