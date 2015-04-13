@@ -159,5 +159,9 @@ app.launch({
 
         console.log(chalk.yellow('[htmllint] found %d errors out of %d files'),
                    errorCount, results.length);
+
+        if (errorCount > 0) {
+            process.exit(1);
+        }
     });
 });
