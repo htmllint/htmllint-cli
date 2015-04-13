@@ -1,6 +1,6 @@
 {
   "name": "htmllint-cli",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A simple cli for htmllint.",
   "bin": {
     "htmllint": "./bin/cli.js"
