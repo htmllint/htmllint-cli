@@ -104,7 +104,7 @@ app.launch({
     }
 
     function lintFile(filename) {
-        var filepath = path.join(cwd, filename);
+        var filepath = path.resolve(cwd, filename);
 
         return readFilePromise(filepath, 'utf8')
             .then(function (src) {
