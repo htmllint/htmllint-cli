@@ -25,7 +25,6 @@ var argv = require('yargs')
             'Lints html files with htmllint.',
             'Usage: $0 [OPTIONS] [ARGS]'
         ].join('\n'))
-        .version(require('../package.json').version + '\n', 'version')
         .example('$0', 'lints all html files in the cwd and all child directories')
         .example('$0 init', 'creates a default .htmllintrc in the cwd')
         .example('$0 *.html', 'lints all html files in the cwd')
@@ -34,7 +33,6 @@ var argv = require('yargs')
         .describe('rc', 'path to a htmllintrc file to use (json)')
         .default('cwd', null)
         .describe('cwd', 'path to use for the current working directory')
-        .help('help')
         .argv;
 
 var args = argv._;
