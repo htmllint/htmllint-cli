@@ -43,25 +43,6 @@ app.launch({
 }, function (env) {
     var cwd = argv.cwd || process.cwd();
 
-    if (args[0] === 'init') {
-        // copy .htmllintrc file
-        var srcPath = path.join(__dirname, '../lib/default_cfg.json'),
-            outputPath = path.join(env.cwd, '.htmllintrc');
-
-        var readStream = fs.createReadStream(srcPath);
-        readStream.on('error', function (err) {
-            console.error('error reading default config file: ', err);
-        });
-
-        var writeStream = fs.createWriteStream(outputPath);
-        writeStream.on('error', function (err) {
-            console.error('error writing config file: ', err);
-        });
-
-        readStream.pipe(writeStream);
-        return;
-    }
-
     var htmllintPath = 'htmllint';
 
     if (env.modulePath) {
@@ -83,6 +64,24 @@ app.launch({
     }
 
     var htmllint = require(htmllintPath);
+
+    if (args[0] === 'init') {
+        // copy .htmllintrc file
+        var srcPath = path.join(__dirname, '../lib/default_cfg.json'),
+            outputPath = path.join(env.cwd, '.htmllintrc');
+
+        var opts = htmllint.Linter.getOptions('default'),
+            config = JSON.stringify(opts, null, 4);
+        config = '{\n    "plugins": [],  // npm modules to load\n'
+               + config.slice(1);
+
+        fs.writeFile(outputPath, config, function (err) {
+            if (err) {
+                console.error('error writing config file: ', err);
+            }
+        });
+        return;
+    }
 
     if (!env.configPath) {
         console.log(
