@@ -31,10 +31,15 @@ var argv = require('yargs')
         .example('$0 public/*.html', 'lints all html files in the public directory')
         .default('rc', null)
         .describe('rc', 'path to a htmllintrc file to use (json)')
+        .default('format', 'simple')
+        .describe('format', 'output formatter (default: simple)')
         .default('cwd', null)
         .describe('cwd', 'path to use for the current working directory')
+        .default('stdin-file-path', null)
+        .describe('stdin-file-path', 'read html content from stdin and specify its file path')
         .argv;
 
+var STDIN_FILENO = 0;
 var args = argv._;
 
 app.launch({
@@ -64,6 +69,7 @@ app.launch({
     }
 
     var htmllint = require(htmllintPath);
+    var formatters = require('../lib/formatters');
 
     if (args[0] === 'init') {
         // copy .htmllintrc file
@@ -96,29 +102,42 @@ app.launch({
     htmllint.use(cfg.plugins || []);
     delete cfg.plugins;
 
+    if (argv.stdinFilePath) {
+        args.unshift(STDIN_FILENO);
+    }
     if (!args.length) {
         args = ['**/*.html'];
     }
 
     function lintFile(filename) {
-        var filepath = path.resolve(cwd, filename);
+        var p;
+        if (filename === STDIN_FILENO) {
+            filename = argv.stdinFilePath;
+            p = new Promise(function (resolve, reject) {
+                process.stdin.resume();
+                process.stdin.setEncoding('utf8');
 
-        return readFilePromise(filepath, 'utf8')
-            .then(function (src) {
+                var content = '';
+                process.stdin.on('data', function (chunk) {
+                    content += chunk;
+                });
+                process.stdin.on('end', function () {
+                    resolve(content);
+                });
+                process.stdin.on('error', function (err) {
+                    reject(err);
+                });
+            });
+        } else {
+            var filepath = path.resolve(cwd, filename);
+            p = readFilePromise(filepath, 'utf8');
+        }
+
+        return p.then(function (src) {
                 return htmllint(src, cfg);
             })
             .then(function (issues) {
-                issues.forEach(function (issue) {
-                    var msg = [
-                        chalk.magenta(filename), ': ',
-                        'line ', issue.line, ', ',
-                        'col ', issue.column, ', ',
-                        chalk.red(htmllint.messages.renderIssue(issue))
-                    ].join('');
-
-                    console.log(msg);
-                });
-
+                formatters.formatMessage.call(htmllint, argv.format, filename, issues);
                 return { errorCount: issues.length };
             })
             .catch(function (err) {
@@ -129,6 +148,9 @@ app.launch({
 
     Promise.all(
         args.map(function (pattern) {
+            if (pattern === STDIN_FILENO) {
+                return STDIN_FILENO;
+            }
             return globPromise(pattern, { cwd: cwd });
         })
     ).then(function (filesArr) {
@@ -142,8 +164,6 @@ app.launch({
     }).done(function (results) {
         var errorCount = 0;
 
-        console.log('');
-
         results.forEach(function (result) {
             if (result.isFulfilled()) {
                 var resultValue = result.value();
@@ -154,8 +174,7 @@ app.launch({
             }
         });
 
-        console.log(chalk.yellow('[htmllint] found %d errors out of %d files'),
-                   errorCount, results.length);
+        formatters.done.call(htmllint, argv.format, errorCount, results.length);
 
         if (errorCount > 0) {
             process.exit(1);
