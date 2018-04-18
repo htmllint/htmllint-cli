@@ -31,8 +31,11 @@ var argv = require('yargs')
         .example('$0 public/*.html', 'lints all html files in the public directory')
         .default('rc', null)
         .describe('rc', 'path to a htmllintrc file to use (json)')
-        .default('format', 'simple')
-        .describe('format', 'output formatter (default: simple)')
+        .option('format', {
+            describe: 'format to output',
+            choices: ['simple', 'json'],
+            default: 'simple'
+        })
         .default('cwd', null)
         .describe('cwd', 'path to use for the current working directory')
         .default('stdin-file-path', null)
