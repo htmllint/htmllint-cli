@@ -115,7 +115,7 @@ app.launch({
     function lintFile(filename) {
         var p;
         if (filename === STDIN_FILENO) {
-            filename = argv.stdin;
+            filename = argv.stdin === true ? 'stdin' : argv.stdin;
             p = new Promise(function (resolve, reject) {
                 process.stdin.resume();
                 process.stdin.setEncoding('utf8');
