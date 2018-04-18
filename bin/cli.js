@@ -38,8 +38,8 @@ var argv = require('yargs')
         })
         .default('cwd', null)
         .describe('cwd', 'path to use for the current working directory')
-        .default('stdin-file-path', null)
-        .describe('stdin-file-path', 'read html content from stdin and specify its file path')
+        .default('stdin', false)
+        .describe('stdin', 'accept input from stdin (using option value for filename in output)')
         .argv;
 
 var STDIN_FILENO = 0;
@@ -105,7 +105,7 @@ app.launch({
     htmllint.use(cfg.plugins || []);
     delete cfg.plugins;
 
-    if (argv.stdinFilePath) {
+    if (argv.stdin) {
         args.unshift(STDIN_FILENO);
     }
     if (!args.length) {
@@ -115,7 +115,7 @@ app.launch({
     function lintFile(filename) {
         var p;
         if (filename === STDIN_FILENO) {
-            filename = argv.stdinFilePath;
+            filename = argv.stdin;
             p = new Promise(function (resolve, reject) {
                 process.stdin.resume();
                 process.stdin.setEncoding('utf8');
